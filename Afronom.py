@@ -40,40 +40,34 @@ class Printer(Instrument):
     #    print("---");
 
 
-class ThreadedInstrument(Instrument):
+class ThreadedInstrumentAdapter(Instrument):
 
-    def __init__(self):
-        pass
-
-    def playNormal_internal(self, note):
-        pass
-
-    def playAccent_internal(self, note):
-        pass
+    def __init__(self, instrument):
+        self.instrument = instrument
 
     def playNormal(self, note):
-        start_new_thread(self.playNormal_internal, (note,))
+        start_new_thread(self.instrument.playNormal, (note,))
         return 0
 
     def playAccent(self, note):
-        start_new_thread(self.playAccent_internal, (note,))
+        start_new_thread(self.instrument.playAccent, (note,))
         return 0
 
 
-class LedLighter(ThreadedInstrument):
+class LedLighter(Instrument):
 
     def __init__(self):
         super().__init__()
         self.led = Pin(25, Pin.OUT)
 
-    def playNormal_internal(self, note):
+    def playNormal(self, note):
         led = self.led
         led.on()
         sleep(0.107)
         led.off()
         return 0.107
 
-    def playAccent_internal(self, note):
+    def playAccent(self, note):
         led = self.led
         led.on()
         sleep(0.17)
@@ -81,7 +75,7 @@ class LedLighter(ThreadedInstrument):
         return 0.17
 
 
-class BuzzerDrum_threaded(ThreadedInstrument):
+class BuzzerDrum(Instrument):
 
     FREQ_NORMAL = 500
     FREQ_ACCENT = 800
@@ -92,14 +86,14 @@ class BuzzerDrum_threaded(ThreadedInstrument):
         super().__init__()
         self.buzzer = PWM(Pin(15))
 
-    def playNormal_internal(self, note):
+    def playNormal(self, note):
         self.buzzer.freq(self.FREQ_NORMAL)
         self.buzzer.duty_u16(self.VOLUME)
         sleep(self.BEEP_LENGTH)
         self.buzzer.duty_u16(0)
         return self.BEEP_LENGTH
 
-    def playAccent_internal(self, note):
+    def playAccent(self, note):
         self.buzzer.freq(self.FREQ_ACCENT)
         self.buzzer.duty_u16(self.VOLUME)
         sleep(self.BEEP_LENGTH)
@@ -107,9 +101,24 @@ class BuzzerDrum_threaded(ThreadedInstrument):
         return self.BEEP_LENGTH
 
 
+class InstrumentFactory:
+
+    @staticmethod
+    def createBuzzerDrum():
+        return ThreadedInstrumentAdapter(BuzzerDrum())
+
+    @staticmethod
+    def createPrinter():
+        return Printer()
+
+    @staticmethod
+    def createLedLighter():
+        return ThreadedInstrumentAdapter(LedLighter())
+
+
 class Sequencer:
 
-    TEMPO_BPM = 200
+    TEMPO_BPM = 150
     instruments = []
 
     def withInstruments(self, instruments):
@@ -137,8 +146,8 @@ class Sequencer_sync(Sequencer):
             seconds = 0
             for instr in self.instruments:
                 seconds = seconds + instr.play(note)
-            sleep(self.tempo_sec / 2 - seconds)
-            #  sleep(self.tempo_sec / 2)
+            # sleep(self.tempo_sec / 2 - seconds)
+            sleep(self.tempo_sec / 2)
 
         for instr in self.instruments:
             instr.onBarEnd()
@@ -166,5 +175,5 @@ class Sequencer_timer(Sequencer):
 
 
 Sequencer_sync() \
-    .withInstruments([BuzzerDrum_threaded(), Printer()]) \
+    .withInstruments([InstrumentFactory.createBuzzerDrum(), Printer()]) \
     .playInLoop("X.xx.xx.X.x.x.x.")
