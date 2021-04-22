@@ -1,5 +1,6 @@
 from time import sleep
-from machine import Pin, Timer
+from machine import Pin, Timer, PWM
+from _thread import *
 
 
 class Instrument:
@@ -39,36 +40,77 @@ class Printer(Instrument):
     #    print("---");
 
 
-class LedLighter(Instrument):
+class ThreadedInstrument(Instrument):
 
     def __init__(self):
-        self.led = Pin(25, Pin.OUT)
-        # self.timer = Timer()
+        pass
 
-    # def playNormal(self, note):
-    #     self.note = note
-    #     # self.timer.init(freq=0, mode=Timer.ONE_SHOT, callback=self.playNormal_internal)
+    def playNormal_internal(self, note):
+        pass
+
+    def playAccent_internal(self, note):
+        pass
 
     def playNormal(self, note):
-        led = self.led
-        led.on()
-        sleep(0.007)
-        led.off()
-        return 0.007
+        start_new_thread(self.playNormal_internal, (note,))
+        return 0
 
     def playAccent(self, note):
+        start_new_thread(self.playAccent_internal, (note,))
+        return 0
+
+
+class LedLighter(ThreadedInstrument):
+
+    def __init__(self):
+        super().__init__()
+        self.led = Pin(25, Pin.OUT)
+
+    def playNormal_internal(self, note):
         led = self.led
         led.on()
-        sleep(0.07)
+        sleep(0.107)
         led.off()
-        return 0.07
+        return 0.107
+
+    def playAccent_internal(self, note):
+        led = self.led
+        led.on()
+        sleep(0.17)
+        led.off()
+        return 0.17
+
+
+class BuzzerDrum_threaded(ThreadedInstrument):
+
+    FREQ_NORMAL = 500
+    FREQ_ACCENT = 800
+    VOLUME = 150
+    BEEP_LENGTH = 0.07
+
+    def __init__(self):
+        super().__init__()
+        self.buzzer = PWM(Pin(15))
+
+    def playNormal_internal(self, note):
+        self.buzzer.freq(self.FREQ_NORMAL)
+        self.buzzer.duty_u16(self.VOLUME)
+        sleep(self.BEEP_LENGTH)
+        self.buzzer.duty_u16(0)
+        return self.BEEP_LENGTH
+
+    def playAccent_internal(self, note):
+        self.buzzer.freq(self.FREQ_ACCENT)
+        self.buzzer.duty_u16(self.VOLUME)
+        sleep(self.BEEP_LENGTH)
+        self.buzzer.duty_u16(0)
+        return self.BEEP_LENGTH
 
 
 class Sequencer:
-    TEMPO_BPM = 130
 
-    def __init__(self):
-        self.instruments = []
+    TEMPO_BPM = 200
+    instruments = []
 
     def withInstruments(self, instruments):
         self.instruments = instruments
@@ -96,7 +138,7 @@ class Sequencer_sync(Sequencer):
             for instr in self.instruments:
                 seconds = seconds + instr.play(note)
             sleep(self.tempo_sec / 2 - seconds)
-            # sleep(self.tempo_sec / 2)
+            #  sleep(self.tempo_sec / 2)
 
         for instr in self.instruments:
             instr.onBarEnd()
@@ -124,5 +166,5 @@ class Sequencer_timer(Sequencer):
 
 
 Sequencer_sync() \
-    .withInstruments([LedLighter(), Printer()]) \
+    .withInstruments([BuzzerDrum_threaded(), Printer()]) \
     .playInLoop("X.xx.xx.X.x.x.x.")
