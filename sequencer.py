@@ -1,8 +1,9 @@
 from time import sleep
-from machine import Timer
+# from machine import Timer
+from interfaces.platforms import AnyPlatform
 
 
-class Sequencer:
+class Sequencer(AnyPlatform):
 
     instruments = []
     tempo = None
@@ -22,6 +23,12 @@ class Sequencer:
         self.instruments = instruments
         return self
 
+    def speedUp(self):
+        self.withTempo(self.tempo + 10)
+
+    def slowDown(self):
+        self.withTempo(self.tempo - 10)
+
     def playBar(self, bar):
         pass
 
@@ -29,7 +36,7 @@ class Sequencer:
         pass
 
 
-class Sequencer_sync(Sequencer):
+class Sequencer_sync(Sequencer, AnyPlatform):
 
     def __init__(self):
         super().__init__()
@@ -42,8 +49,8 @@ class Sequencer_sync(Sequencer):
             seconds = 0
             for instr in self.instruments:
                 seconds = seconds + instr.play(note)
-            # sleep(self.tempo_sec / 2 - seconds)
-            sleep(self.tempo_sec / 2)
+            sleep(self.tempo_sec / 2 - seconds)
+            # sleep(self.tempo_sec / 2)
 
         for instr in self.instruments:
             instr.onBarEnd()
@@ -53,18 +60,18 @@ class Sequencer_sync(Sequencer):
             self.playBar(bar)
 
 
-class Sequencer_timer(Sequencer):
-
-    def __init__(self):
-        super().__init__()
-        self.timer = Timer()
-
-    def onEightNote(self, timer):
-        for instr in self.instruments:
-            instr.play("x")
-
-    def playBar(self, bar):
-        self.timer.init(freq=self.tempo / 60, mode=Timer.PERIODIC, callback=self.onEightNote)
-
-    def playInLoop(self, bar):
-        self.playBar(bar)
+# class Sequencer_timer(Sequencer):
+#
+#     def __init__(self):
+#         super().__init__()
+#         self.timer = Timer()
+#
+#     def onEightNote(self, timer):
+#         for instr in self.instruments:
+#             instr.play("x")
+#
+#     def playBar(self, bar):
+#         self.timer.init(freq=self.tempo / 60, mode=Timer.PERIODIC, callback=self.onEightNote)
+#
+#     def playInLoop(self, bar):
+#         self.playBar(bar)

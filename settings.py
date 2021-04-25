@@ -1,7 +1,9 @@
 import json
 
+from interfaces.platforms import AnyPlatform
 
-class Settings:
+
+class Settings(AnyPlatform):
 
     DEFAULT_SETTINGS = {
         "Afronom": {
@@ -16,25 +18,32 @@ class Settings:
     settingsData = None
 
     def __init__(self):
-        self.load()
+        pass
 
     def load(self):
         f = open(self.CONFIG_FILENAME)
         self.settingsData = json.loads(f.read())
         f.close()
+        return self
 
     def save(self):
         f = open(self.CONFIG_FILENAME, 'w')
         f.write(json.dumps(self.settingsData))
         f.close()
+        return self
 
     def resetDefaults(self):
         f = open(self.CONFIG_FILENAME, 'w')
         f.write(json.dumps(self.DEFAULT_SETTINGS))
         f.close()
+        return self
 
 
 def test_settings():
     s = Settings()
     s.resetDefaults()
     s.load()
+
+
+if __name__ == "__main__":
+    test_settings()
