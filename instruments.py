@@ -1,8 +1,8 @@
 from _thread import *
-from interfaces.platforms import AnyPlatform
+from interfaces import Instrument
 
 
-class Instrument(AnyPlatform):
+class AbstractInstrument(Instrument):
 
     def playNormal(self, note):
         pass
@@ -25,7 +25,7 @@ class Instrument(AnyPlatform):
             return 0
 
 
-class Printer(Instrument, AnyPlatform):
+class Printer(AbstractInstrument):
 
     def playNormal(self, note):
         print("p", end="")
@@ -39,7 +39,7 @@ class Printer(Instrument, AnyPlatform):
     #    print("---");
 
 
-class ThreadedInstrumentAdapter(Instrument, AnyPlatform):
+class ThreadedInstrumentAdapter(Instrument):
 
     def __init__(self, instrument):
         self.instrument = instrument

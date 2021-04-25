@@ -1,9 +1,9 @@
 from time import sleep
 # from machine import Timer
-from interfaces.platforms import AnyPlatform
+from interfaces import Sequencer
 
 
-class Sequencer(AnyPlatform):
+class AbstractSequencer(Sequencer):
 
     instruments = []
     tempo = None
@@ -36,7 +36,7 @@ class Sequencer(AnyPlatform):
         pass
 
 
-class Sequencer_sync(Sequencer, AnyPlatform):
+class Sequencer_sync(AbstractSequencer):
 
     def __init__(self):
         super().__init__()

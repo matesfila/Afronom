@@ -1,22 +1,21 @@
-from AfronomFactory import AfronomFactory
+from factories import DefaultAfronomFactory
+from interfaces import Afronom
 
 
-class Afronom:
+class AfronomImpl(Afronom):
 
     sequencer = None
 
     def __init__(self):
-        self.settings = AfronomFactory.createSettings()
+        self.settings = DefaultAfronomFactory.createSettings()
         self.tempo = self.settings.settingsData["Afronom"]["tempo"]
         self.volume = self.settings.settingsData["Afronom"]["volume"]
         self.rhythm = self.settings.settingsData["Afronom"]["rhythm"]
 
-        AfronomFactory.createDefaultController() \
+        DefaultAfronomFactory.createDefaultController() \
             .withSpeedUpEvent(self.speedUp) \
             .withSlowDownEvent(self.slowDown) \
             .initialize()
-
-        # AfronomKeyboardController(self).initialize()
 
     def speedUp(self):
         if self.sequencer is not None:
@@ -27,13 +26,13 @@ class Afronom:
             self.sequencer.slowDown()
 
     def play(self):
-        self.sequencer = AfronomFactory.createSequencer()
+        self.sequencer = DefaultAfronomFactory.createSequencer()
         self.sequencer \
             .withTempo(self.tempo) \
-            .withInstruments([AfronomFactory.createDefaultInstrument()]) \
+            .withInstruments([DefaultAfronomFactory.createDefaultInstrument()]) \
             .playInLoop("X.xx.xx.X.x.x.x.")
 
 
 if __name__ == "__main__":
     # test_settings()
-    Afronom().play()
+    AfronomImpl().play()

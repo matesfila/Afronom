@@ -1,7 +1,7 @@
-from interfaces.platforms import AnyPlatform
+from interfaces import ButtonController, Om, Controller
 
 
-class HwButton(AnyPlatform):
+class AbstractButtonController(ButtonController):
     """
     Abstraktná trieda pre monitorovanie eventov hardwarových controllerov.
     """
@@ -21,7 +21,7 @@ class HwButton(AnyPlatform):
         return self
 
 
-class AfronomController(AnyPlatform):
+class AfronomController(Controller):
 
     speedUpEvent = None
     slowDownEvent = None

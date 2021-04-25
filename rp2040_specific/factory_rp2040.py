@@ -1,8 +1,9 @@
-from instrument import ThreadedInstrumentAdapter, Printer
+from instruments import ThreadedInstrumentAdapter, Printer
+from interfaces import AfronomFactory
 from rp2040_specific.instrument_rp2040 import LedLighter, BuzzerDrum
 
 
-class RP2040Factory:
+class RP2040Factory(AfronomFactory):
 
     class Instrument:
 

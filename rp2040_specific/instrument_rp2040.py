@@ -1,10 +1,10 @@
-from instrument import Instrument
+from instruments import AbstractInstrument
 from interfaces.platforms import PikoPlatform
 from time import sleep
 from machine import Pin, PWM
 
 
-class LedLighter(Instrument, PikoPlatform):
+class LedLighter(AbstractInstrument, PikoPlatform):
 
     def __init__(self):
         super().__init__()
@@ -25,7 +25,7 @@ class LedLighter(Instrument, PikoPlatform):
         return 0.17
 
 
-class BuzzerDrum(Instrument, PikoPlatform):
+class BuzzerDrum(AbstractInstrument, PikoPlatform):
 
     FREQ_NORMAL = 500
     FREQ_ACCENT = 800

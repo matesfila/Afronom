@@ -1,9 +1,9 @@
-from instrument import Instrument
+from instruments import AbstractInstrument
 from interfaces.platforms import X86Platform
 from playsound import playsound
 
 
-class BuzzerDrum(Instrument, X86Platform):
+class BuzzerDrum(AbstractInstrument, X86Platform):
 
     FREQ_NORMAL = 500
     FREQ_ACCENT = 800

@@ -8,13 +8,6 @@ class Platform:
     pass
 
 
-class AnyPlatform(Platform):
-    """
-    Beží na ľubovoľnej platforme.
-    """
-    pass
-
-
 class X86Platform(Platform):
     """
     Beží na windowse resp X86 procesore.

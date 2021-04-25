@@ -1,9 +1,9 @@
 import json
 
-from interfaces.platforms import AnyPlatform
+from interfaces import Om
 
 
-class Settings(AnyPlatform):
+class Settings(Om):
 
     DEFAULT_SETTINGS = {
         "Afronom": {

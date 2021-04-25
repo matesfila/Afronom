@@ -2,11 +2,11 @@ import threading
 
 from pynput.keyboard import Listener, Key
 
-from hwcontrollers import HwButton, AfronomController
+from controllers import AbstractButtonController, AfronomController
 from interfaces.platforms import X86Platform
 
 
-class PCKeyboard(HwButton, X86Platform):
+class PCKeyboard(AbstractButtonController, X86Platform):
     """
     Monitor štandardnej počítačovej klávesnice.
     Nebude fungovať v micropythone, dostupné iba pre PC.
