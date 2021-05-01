@@ -38,14 +38,19 @@ class AbstractSequencer(Sequencer):
 
 class Sequencer_sync(AbstractSequencer):
 
+    stopped = True
+
     def __init__(self):
         super().__init__()
 
     def playBar(self, bar):
+        self.stopped = False
         for instr in self.instruments:
             instr.onBarStart()
 
         for note in bar:
+            if self.stopped:
+                break
             seconds = 0
             for instr in self.instruments:
                 seconds = seconds + instr.play(note)
@@ -55,10 +60,18 @@ class Sequencer_sync(AbstractSequencer):
         for instr in self.instruments:
             instr.onBarEnd()
 
+        # self.stopped = True
+
     def playInLoop(self, bar):
-        while True:
+        self.stopped = False
+        while not self.stopped:
             self.playBar(bar)
 
+    def stop(self):
+        self.stopped = True
+
+    def isPlaying(self):
+        return not self.stopped
 
 # class Sequencer_timer(Sequencer):
 #

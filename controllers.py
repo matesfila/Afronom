@@ -21,13 +21,16 @@ class AbstractButtonController(ButtonController):
         return self
 
 
-class AfronomController(Controller):
+class AbstractAfronomController(Controller):
 
     speedUpEvent = None
     slowDownEvent = None
+    playEvent = None
+    stopEvent = None
+    togglePlayEvent = None
 
     def initialize(self):
-        pass
+        return self
 
     def withSpeedUpEvent(self, event):
         self.speedUpEvent = event
@@ -36,3 +39,19 @@ class AfronomController(Controller):
     def withSlowDownEvent(self, event):
         self.slowDownEvent = event
         return self
+
+    def withPlayEvent(self, event):
+        self.playEvent = event
+        return self
+
+    def withStopEvent(self, event):
+        self.stopEvent = event
+        return self
+
+    def withTogglePlayEvent(self, event):
+        self.togglePlayEvent = event
+        return self
+
+
+class EmptyAfronomController(AbstractAfronomController):
+    pass

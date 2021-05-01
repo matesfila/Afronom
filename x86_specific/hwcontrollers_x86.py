@@ -2,7 +2,7 @@ import threading
 
 from pynput.keyboard import Listener, Key
 
-from controllers import AbstractButtonController, AfronomController
+from controllers import AbstractButtonController, AbstractAfronomController
 from interfaces.platforms import X86Platform
 
 
@@ -34,7 +34,6 @@ class PCKeyboard(AbstractButtonController, X86Platform):
         #     return False  # Stop listener
 
     def thread_function(self):
-        super().startMonitoring()
         with Listener(
                 on_press=self.on_press,
                 on_release=self.on_release) as listener:
@@ -46,7 +45,7 @@ class PCKeyboard(AbstractButtonController, X86Platform):
         x.start()
 
 
-class AfronomKeyboardController(AfronomController, X86Platform):
+class AfronomKeyboardController(AbstractAfronomController, X86Platform):
 
     def onKeyDown(self, key):
         if Key.up == key:
@@ -55,12 +54,14 @@ class AfronomKeyboardController(AfronomController, X86Platform):
         elif Key.down == key:
             # print("slowing down")
             self.slowDownEvent()
+        elif Key.ctrl_r == key:
+            self.togglePlayEvent()
 
     def initialize(self):
         PCKeyboard() \
             .withKeyDownEvent(lambda key: self.onKeyDown(key)) \
-            .withKeyUpEvent(lambda key: self.onKeyDown(key)) \
             .startMonitoring()
+        return self
 
 
 if __name__ == "__main__":

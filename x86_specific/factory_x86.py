@@ -1,9 +1,10 @@
+from factories import AbstractAfronomFactory
 from instruments import ThreadedInstrumentAdapter, Printer
-from interfaces import AfronomFactory
+from x86_specific.hwcontrollers_x86 import AfronomKeyboardController
 from x86_specific.instrument_x86 import BuzzerDrum
 
 
-class X86Factory(AfronomFactory):
+class X86Factory(AbstractAfronomFactory):
 
     class Instrument:
 
@@ -14,3 +15,9 @@ class X86Factory(AfronomFactory):
         @staticmethod
         def createBuzzerDrum():
             return ThreadedInstrumentAdapter(BuzzerDrum())
+
+    def createDefaultInstrument(self):
+        return X86Factory.Instrument.createPrinter()
+
+    def createDefaultController(self):
+        return AfronomKeyboardController()

@@ -17,9 +17,25 @@ class Afronom(Om):
     def play(self):
         pass
 
+    def stop(self):
+        pass
+
+    def togglePlay(self):
+        pass
+
 
 class AfronomFactory(Om):
-    pass
+    def createSettings(self):
+        pass
+
+    def createSequencer(self):
+        pass
+
+    def createDefaultInstrument(self):
+        pass
+
+    def createDefaultController(self):
+        pass
 
 
 class Sequencer(Om):

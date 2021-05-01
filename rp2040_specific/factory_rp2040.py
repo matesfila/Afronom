@@ -1,15 +1,17 @@
-from instruments import ThreadedInstrumentAdapter, Printer
-from interfaces import AfronomFactory
+from controllers import EmptyAfronomController
+from factories import AbstractAfronomFactory
+from instruments import Printer
 from rp2040_specific.instrument_rp2040 import LedLighter, BuzzerDrum
 
 
-class RP2040Factory(AfronomFactory):
+class RP2040Factory(AbstractAfronomFactory):
 
     class Instrument:
 
         @staticmethod
         def createBuzzerDrum():
-            return ThreadedInstrumentAdapter(BuzzerDrum())
+            # return ThreadedInstrumentAdapter(BuzzerDrum())
+            return BuzzerDrum()
 
         @staticmethod
         def createPrinter():
@@ -17,4 +19,11 @@ class RP2040Factory(AfronomFactory):
 
         @staticmethod
         def createLedLighter():
-            return ThreadedInstrumentAdapter(LedLighter())
+            # return ThreadedInstrumentAdapter(LedLighter())
+            return LedLighter()
+
+    def createDefaultInstrument(self):
+        return RP2040Factory.Instrument.createBuzzerDrum()
+
+    def createDefaultController(self):
+        return EmptyAfronomController()
