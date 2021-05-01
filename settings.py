@@ -1,5 +1,5 @@
-import json
-
+import yaml
+from yaml import SafeLoader
 from interfaces import Om
 
 
@@ -13,7 +13,7 @@ class Settings(Om):
         }
     }
 
-    CONFIG_FILENAME = "afronom.cfg"
+    CONFIG_FILENAME = "settings.yaml"
 
     settingsData = None
 
@@ -22,26 +22,26 @@ class Settings(Om):
 
     def load(self):
         f = open(self.CONFIG_FILENAME)
-        self.settingsData = json.loads(f.read())
+        self.settingsData = yaml.load(f.read(), Loader=SafeLoader)
         f.close()
         return self
 
     def save(self):
         f = open(self.CONFIG_FILENAME, 'w')
-        f.write(json.dumps(self.settingsData))
+        f.write(yaml.dump(self.settingsData))
         f.close()
         return self
 
-    def resetDefaults(self):
-        f = open(self.CONFIG_FILENAME, 'w')
-        f.write(json.dumps(self.DEFAULT_SETTINGS))
+    def generateDefaults(self):
+        f = open("default-settings.yaml", 'w')
+        f.write(yaml.dump(self.DEFAULT_SETTINGS))
         f.close()
         return self
 
 
 def test_settings():
     s = Settings()
-    s.resetDefaults()
+    s.generateDefaults()
     s.load()
 
 
