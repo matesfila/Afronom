@@ -1,1 +1,1 @@
-rshell -p COM5 -f .\batchutils\deploy.sh
+rshell -p COM3 -f .\batchutils\deploy.sh

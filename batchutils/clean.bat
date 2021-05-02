@@ -1,1 +1,1 @@
-rshell -p COM5 -f .\batchutils\clean.sh
+rshell -p COM3 -f .\batchutils\clean.sh
