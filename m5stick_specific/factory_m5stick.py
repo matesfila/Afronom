@@ -1,5 +1,7 @@
 from factories import AbstractAfronomFactory
+from instruments import Printer
 from interfaces.platforms import M5StackPlatform
+from m5stick_specific.hwcontrollers_m5stick import AfronomOneButtonController
 from m5stick_specific.instrument_m5stick import BuzzerDrum
 from rp2040_specific.instrument_rp2040 import LedLighter, TogglerInstrument
 
@@ -23,6 +25,10 @@ class M5StickFactory(AbstractAfronomFactory, M5StackPlatform):
             # return ThreadedInstrumentAdapter(LedLighter())
 
     def createDefaultInstrument(self):
-        return M5StickFactory.Instrument.createMechanicDrum()
+        return M5StickFactory.Instrument.createBuzzerDrum()
+        # return Printer()
+
+    def createDefaultController(self):
+        return AfronomOneButtonController()
 
 

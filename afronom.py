@@ -36,21 +36,27 @@ class AfronomImpl(Afronom):
 
     def play(self):
         # print("play")
-        self.controller.initialize()  # TODO preskumat tento riadok, na x86 bez neho po stlaceni stop uz nefunguje play
+        # self.controller.initialize()  # TODO preskumat tento riadok, na x86 bez neho po stlaceni stop uz nefunguje play
+        # print("before play: {}".format(self.controller))
         self.sequencer.playInLoop(self.rhythm)
+        # print("after play: {}".format(self.controller))
 
     def stop(self):
         # print("stop")
         self.sequencer.stop()
 
+    def isPlaying(self):
+        return self.sequencer is not None and self.sequencer.isPlaying()
+
     def togglePlay(self):
         # print("toggle")
         # return None
-        if self.sequencer is not None and self.sequencer.isPlaying():
-            self.stop()
+        if self.isPlaying():
+            self.speedUp()
         else:
             self.play()
 
 # if __name__ == "__main__":
 #     # test_settings()
 #     AfronomImpl(X86Factory()).play()
+
