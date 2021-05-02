@@ -1,10 +1,11 @@
 from factories import AbstractAfronomFactory
 from instruments import ThreadedInstrumentAdapter, Printer
+from interfaces.platforms import X86Platform
 from x86_specific.hwcontrollers_x86 import AfronomKeyboardController
 from x86_specific.instrument_x86 import BuzzerDrum
 
 
-class X86Factory(AbstractAfronomFactory):
+class X86Factory(AbstractAfronomFactory, X86Platform):
 
     class Instrument:
 

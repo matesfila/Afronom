@@ -4,11 +4,39 @@ from time import sleep
 from machine import Pin, PWM
 
 
+class TogglerInstrument(AbstractInstrument, PikoPlatform):
+
+    pinNumber = None
+    pin = None
+
+    def __init__(self, pin):
+        super().__init__()
+        self.pinNumber = pin
+        self.pin = Pin(self.pinNumber, Pin.OUT)
+
+    def playNormal(self, note):
+        led = self.pin
+        led.off()
+        sleep(0.0045)
+        led.on()
+        return 0.0045
+
+    def playAccent(self, note):
+        led = self.pin
+        led.off()
+        sleep(0.03)
+        led.on()
+        return 0.03
+
+
 class LedLighter(AbstractInstrument, PikoPlatform):
 
-    def __init__(self):
+    pinNumber = None
+
+    def __init__(self, pin):
         super().__init__()
-        self.led = Pin(25, Pin.OUT)
+        self.pinNumber = pin
+        self.led = Pin(self.pinNumber, Pin.OUT)
 
     def playNormal(self, note):
         led = self.led
@@ -32,9 +60,12 @@ class BuzzerDrum(AbstractInstrument, PikoPlatform):
     VOLUME = 150
     BEEP_LENGTH = 0.07
 
-    def __init__(self):
+    pin = None
+
+    def __init__(self, pin):
         super().__init__()
-        self.buzzer = PWM(Pin(15))
+        self.pin = pin
+        self.buzzer = PWM(Pin(self.pin))
 
     def playNormal(self, note):
         self.buzzer.freq(self.FREQ_NORMAL)
@@ -49,3 +80,4 @@ class BuzzerDrum(AbstractInstrument, PikoPlatform):
         sleep(self.BEEP_LENGTH)
         self.buzzer.duty_u16(0)
         return self.BEEP_LENGTH
+

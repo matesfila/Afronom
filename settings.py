@@ -6,7 +6,7 @@ class Settings(Om):
 
     DEFAULT_SETTINGS = {
         "Afronom": {
-            "tempo": 100,
+            "tempo": 150,
             "volume": 400,
             "rhythm": "X.xx.xx.X.x.x.x."
         }
