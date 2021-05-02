@@ -17,16 +17,16 @@ class TogglerInstrument(AbstractInstrument, PikoPlatform):
     def playNormal(self, note):
         led = self.pin
         led.off()
-        sleep(0.0045)
+        sleep(0.004)
         led.on()
-        return 0.0045
+        return 0.004
 
     def playAccent(self, note):
         led = self.pin
         led.off()
-        sleep(0.03)
+        sleep(0.011)
         led.on()
-        return 0.03
+        return 0.011
 
 
 class LedLighter(AbstractInstrument, PikoPlatform):

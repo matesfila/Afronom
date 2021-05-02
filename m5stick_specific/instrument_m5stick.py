@@ -8,7 +8,7 @@ class BuzzerDrum(AbstractInstrument, M5StackPlatform):
 
     FREQ_NORMAL = 500
     FREQ_ACCENT = 800
-    VOLUME = 200
+    VOLUME = 500
     BEEP_LENGTH = 0.07
 
     pinNumber = None
@@ -17,6 +17,8 @@ class BuzzerDrum(AbstractInstrument, M5StackPlatform):
         super().__init__()
         self.pinNumber = pin
         self.buzzer = PWM(Pin(self.pinNumber))
+        # stáva sa že na začiatku defaultné bzučí, tak ho tu stíšim:
+        self.buzzer.duty(0)
 
     def playNormal(self, note):
         self.buzzer.freq(self.FREQ_NORMAL)
