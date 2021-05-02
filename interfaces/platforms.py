@@ -20,3 +20,11 @@ class PikoPlatform(Platform):
     Beží na Raspberry PI Pico.
     """
     pass
+
+
+class M5StackPlatform(Platform):
+    """
+    Beží na M5Stack.
+    """
+    pass
+
